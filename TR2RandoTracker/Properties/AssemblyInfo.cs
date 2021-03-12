@@ -11,7 +11,7 @@ using System.Windows;
 [assembly: AssemblyDescription("Tracks completed levels when playing TR2 Randomizer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tomp Community")]
-[assembly: AssemblyProduct("TR2RandoTracker v0.9.0-beta")]
+[assembly: AssemblyProduct("TR2RandoTracker v0.9.1-beta")]
 [assembly: AssemblyCopyright("Copyright © Tomp Community 2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
