@@ -1,0 +1,55 @@
+﻿<Window x:Class="TR2RandoTracker.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:c="clr-namespace:TR2RandoTracker.Controls"
+        xmlns:m="clr-namespace:TR2RandoTracker.Model"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip"
+        MouseDown="Window_MouseDown"
+        WindowStartupLocation="Manual"
+        Icon="..\Resources\clipboard.ico"
+        Title="TR2 Rando Tracker" Height="486" Width="300" Left="0" Top="0">
+    <Window.ContextMenu>
+        <ContextMenu>
+            <MenuItem
+                Header="Check for updates"
+                Click="UpdatesMenuItem_Click"/>
+            <MenuItem
+                Header="About TR2 Rando Tracker"
+                Click="AboutMenuItem_Click"/>
+            <Separator/>
+            <MenuItem
+                Header="Exit"
+                Click="ExitMenuItem_Click"/>
+        </ContextMenu>
+    </Window.ContextMenu>
+    <Grid>
+        <ListView x:Name="_listView"
+                  MouseDown="Window_MouseDown"
+                  Padding="5, 0"
+                  Background="#151515"
+                  Foreground="#fff"
+                  FontSize="15"
+                  SelectionMode="Single"
+                  ItemContainerStyle="{StaticResource UnstyledListViewItem}"
+                  BorderThickness="0"
+                  ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                  ScrollViewer.VerticalScrollBarVisibility="Hidden">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type m:LevelView}">
+                    <c:LevelViewControl
+                        MouseDown="Window_MouseDown"
+                        LevelReached="{Binding Visible}"
+                        LevelName="{Binding LevelName}"
+                        LevelSequence="{Binding LevelSequence}"
+                        Unarmed="{Binding Unarmed}"
+                        Ammoless="{Binding Ammoless}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Window>
