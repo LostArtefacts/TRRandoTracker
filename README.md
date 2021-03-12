@@ -13,7 +13,7 @@ _Prerequisites_
 * .NET Framework 4.7.2
 
 _Install Steps_
-* Download the latest release from https://github.com/lahm86/TR2RandoTracker/releases
+* Download the latest release from https://github.com/lahm86/TR2RandoTracker/releases/latest
 * Extract the zip file to any location on your PC.
 * Run TR2RandoTracker.exe
 
