@@ -13,6 +13,7 @@ namespace TR2RandoTracker.Windows
     public partial class MainWindow : Window
     {
         private readonly Tomp2Tracker _tracker;
+        private bool _autoUpdateMessageShown;
 
         public MainWindow()
         {
@@ -22,6 +23,7 @@ namespace TR2RandoTracker.Windows
             _tracker = new Tomp2Tracker();
             _tracker.TrackingChanged += Tracker_TrackingChanged;
 
+            _autoUpdateMessageShown = false;
             UpdateChecker.Instance.UpdateAvailable += UpdateChecker_UpdateAvailable;
 
             Application.Current.Exit += Application_Exit;
@@ -61,11 +63,15 @@ namespace TR2RandoTracker.Windows
             switch (e.Status)
             {
                 case TrackingStatus.TitleScreen:
+                    _resetMenu.IsEnabled = true;
+                    _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
+                    break;
                 case TrackingStatus.InLevel:
+                    _resetMenu.IsEnabled = false;
                     _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
                     break;
                 case TrackingStatus.ExeStopped:
-                    _listView.ItemsSource = new LevelViewList();
+                    _resetMenu.IsEnabled = true;
                     break;
             }
         }
@@ -93,6 +99,7 @@ namespace TR2RandoTracker.Windows
             {
                 if (UpdateChecker.Instance.CheckForUpdates())
                 {
+                    _autoUpdateMessageShown = false;
                     ShowUpdateWindow();
                 }
                 else
@@ -108,12 +115,21 @@ namespace TR2RandoTracker.Windows
 
         private void ShowUpdateWindow()
         {
-            new UpdateAvailableWindow().ShowDialog();
+            if (!_autoUpdateMessageShown)
+            {
+                _autoUpdateMessageShown = true;
+                new UpdateAvailableWindow().ShowDialog();
+            }
         }
 
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             new AboutWindow().ShowDialog();
+        }
+
+        private void ResetMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            _listView.ItemsSource = new LevelViewList();
         }
     }
 }

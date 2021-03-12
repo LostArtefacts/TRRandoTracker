@@ -26,7 +26,7 @@ namespace TR2RandoTracker.Updates
             }
         }
 
-        private const string _updateUrl = "https://github.com/lahm86/TR2RandoTracker/releases/latest";
+        private const string _updateUrl = "https://api.github.com/repos/lahm86/TR2RandoTracker/releases/latest";
 
         private readonly TimeSpan _initialDelay, _periodicDelay;
         private readonly CancellationTokenSource _cancelSource;

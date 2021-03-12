@@ -16,6 +16,11 @@
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem
+                x:Name="_resetMenu"
+                Header="Reset"
+                Click="ResetMenuItem_Click"/>
+            <Separator/>
+            <MenuItem
                 Header="Check for updates"
                 Click="UpdatesMenuItem_Click"/>
             <MenuItem
