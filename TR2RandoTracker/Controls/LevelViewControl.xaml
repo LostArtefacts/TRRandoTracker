@@ -54,11 +54,11 @@
     </UserControl.Resources>
 
     <Border 
-        x:Name="_content"
-        BorderBrush="#353535"
+        x:Name="_border"
+        BorderBrush="{Binding Separator}"
         BorderThickness="0, 0, 0, 1" 
         Padding="0, 2">
-        <StackPanel>
+        <StackPanel x:Name="_content">
             <Grid Style="{StaticResource BoolToVis}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="21"/>

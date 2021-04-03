@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TR2RandoTracker.Model;
 
 namespace TR2RandoTracker.Controls
 {
@@ -78,6 +79,7 @@ namespace TR2RandoTracker.Controls
         public LevelViewControl()
         {
             InitializeComponent();
+            _border.DataContext = Settings.Instance;
             _content.DataContext = this;
         }
     }

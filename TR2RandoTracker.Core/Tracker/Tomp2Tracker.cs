@@ -129,19 +129,6 @@ namespace TR2RandoTracker.Core.Tracker
                         FireLevelChanged(currentLevel = level, currentTitle = titleScreen);
                     }
                 }
-                
-
-                //if (titleScreen)
-                //{
-                //    if (currentLevel != 0)
-                //    {
-                //        FireLevelChanged(currentLevel = 0);
-                //    }
-                //}
-                //else if (currentLevel != level)
-                //{
-                //    FireLevelChanged(currentLevel = level);
-                //}
 
                 Thread.Sleep(500);
             }

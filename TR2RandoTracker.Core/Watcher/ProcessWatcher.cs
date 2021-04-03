@@ -59,10 +59,6 @@ namespace TR2RandoTracker.Core.Watcher
                         });
                         _currentProcess = null;
                     }
-                    else
-                    {
-
-                    }
                 }
 
                 Thread.Sleep(500);

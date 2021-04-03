@@ -9,19 +9,34 @@
         WindowStyle="None"
         AllowsTransparency="True"
         ResizeMode="CanResizeWithGrip"
+        SizeChanged="Window_SizeChanged"
         MouseDown="Window_MouseDown"
+        Background="{Binding Background}"
         WindowStartupLocation="Manual"
         Icon="..\Resources\clipboard.ico"
         Title="TR2 Rando Tracker" Height="486" Width="300" Left="0" Top="0">
+    
     <Window.ContextMenu>
         <ContextMenu>
             <MenuItem
+                Header="Colour Scheme..."
+                Click="ColourSchemeMenu_Click"/>
+            <MenuItem
+                x:Name="_onTopMenu"
+                Header="Always on Top"
+                Click="AlwaysOnTopMenuItem_Click"/>
+            <MenuItem
+                x:Name="_resizeMenu"
+                Header="Show Resize Grip"
+                Click="ResizeMenuItem_Click"/>
+            <Separator/>
+            <MenuItem
                 x:Name="_resetMenu"
-                Header="Reset"
+                Header="Reset Level List"
                 Click="ResetMenuItem_Click"/>
             <Separator/>
             <MenuItem
-                Header="Check for updates"
+                Header="Check for Updates"
                 Click="UpdatesMenuItem_Click"/>
             <MenuItem
                 Header="About TR2 Rando Tracker"
@@ -36,8 +51,8 @@
         <ListView x:Name="_listView"
                   MouseDown="Window_MouseDown"
                   Padding="5, 0"
-                  Background="#151515"
-                  Foreground="#fff"
+                  Background="Transparent"
+                  Foreground="{Binding Foreground}"
                   FontSize="15"
                   SelectionMode="Single"
                   ItemContainerStyle="{StaticResource UnstyledListViewItem}"

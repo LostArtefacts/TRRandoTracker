@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using TR2RandoTracker.Core.Tracker;
 using TR2RandoTracker.Model;
 using TR2RandoTracker.Updates;
@@ -13,17 +14,28 @@ namespace TR2RandoTracker.Windows
     public partial class MainWindow : Window
     {
         private readonly Tomp2Tracker _tracker;
-        private bool _autoUpdateMessageShown;
+        private bool _autoUpdateMessageShown, _gameInProgress;
 
         public MainWindow()
         {
             InitializeComponent();
+
             _listView.ItemsSource = new LevelViewList();
+            _listView.DataContext = DataContext = Settings.Instance;
+
+            Top = Settings.Instance.Top;
+            Left = Settings.Instance.Left;
+            Width = Settings.Instance.Width;
+            Height = Settings.Instance.Height;
+
+            Topmost = _onTopMenu.IsChecked = Settings.Instance.AlwaysOnTop;
+            ResizeMode = Settings.Instance.Resizable ? ResizeMode.CanResizeWithGrip : ResizeMode.NoResize;
+            _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
 
             _tracker = new Tomp2Tracker();
             _tracker.TrackingChanged += Tracker_TrackingChanged;
 
-            _autoUpdateMessageShown = false;
+            _autoUpdateMessageShown = _gameInProgress = false;
             UpdateChecker.Instance.UpdateAvailable += UpdateChecker_UpdateAvailable;
 
             Application.Current.Exit += Application_Exit;
@@ -33,7 +45,10 @@ namespace TR2RandoTracker.Windows
         {
             if (Dispatcher.CheckAccess())
             {
-                ShowUpdateWindow();
+                if (!_gameInProgress)
+                {
+                    ShowUpdateWindow();
+                }
             }
             else
             {
@@ -63,15 +78,19 @@ namespace TR2RandoTracker.Windows
             switch (e.Status)
             {
                 case TrackingStatus.TitleScreen:
+                    _gameInProgress = true;
                     _resetMenu.IsEnabled = true;
                     _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
                     break;
                 case TrackingStatus.InLevel:
+                    _gameInProgress = true;
                     _resetMenu.IsEnabled = false;
                     _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
                     break;
                 case TrackingStatus.ExeStopped:
+                    _gameInProgress = false;
                     _resetMenu.IsEnabled = true;
+                    _listView.ItemsSource = new LevelViewList();
                     break;
             }
         }
@@ -83,6 +102,7 @@ namespace TR2RandoTracker.Windows
                 try
                 {
                     DragMove();
+                    StoreWindowState();
                 }
                 catch { }
             }
@@ -129,7 +149,46 @@ namespace TR2RandoTracker.Windows
 
         private void ResetMenuItem_Click(object sender, RoutedEventArgs e)
         {
+            Settings.Instance.Background = new SolidColorBrush(Colors.Red);
             _listView.ItemsSource = new LevelViewList();
+        }
+
+        private void ColourSchemeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ColourSchemeWindow csw = new ColourSchemeWindow();
+            if (csw.ShowDialog() ?? false)
+            {
+                Settings.Instance.Save();
+            }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            StoreWindowState();
+        }
+
+        private void AlwaysOnTopMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            _onTopMenu.IsChecked = Topmost = !Topmost;
+            StoreWindowState();
+        }
+
+        private void ResizeMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ResizeMode = ResizeMode == ResizeMode.CanResizeWithGrip ? ResizeMode.NoResize : ResizeMode.CanResizeWithGrip;
+            _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
+            StoreWindowState();
+        }
+
+        private void StoreWindowState()
+        {
+            Settings.Instance.Top = Top;
+            Settings.Instance.Left = Left;
+            Settings.Instance.Width = Width;
+            Settings.Instance.Height = Height;
+            Settings.Instance.AlwaysOnTop = Topmost;
+            Settings.Instance.Resizable = ResizeMode == ResizeMode.CanResizeWithGrip;
+            Settings.Instance.Save();
         }
     }
 }

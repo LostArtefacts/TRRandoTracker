@@ -71,6 +71,16 @@
                 by James Newton-King
             </TextBlock>
 
+            <TextBlock>
+                Uses 
+                <Hyperlink ToolTip="https://github.com/xceedsoftware/wpftoolkit"
+                           NavigateUri="https://github.com/xceedsoftware/wpftoolkit"
+                           RequestNavigate="Hyperlink_RequestNavigate">
+                     Extended.Wpf.Toolkit
+                </Hyperlink>
+                by Xceed
+            </TextBlock>
+
             <TextBlock Margin="0,20,0,0">
                 Icon made by 
                 <Hyperlink ToolTip="https://www.flaticon.com/authors/kiranshastry" 
