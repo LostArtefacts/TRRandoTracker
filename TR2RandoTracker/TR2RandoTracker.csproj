@@ -187,6 +187,18 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>mkdir Lib
+move cs-CZ Lib
+move de Lib
+move es Lib
+move fr Lib
+move hu Lib
+move it Lib
+move ja-JP Lib
+move pt-BR Lib
+move ro Lib
+move ru Lib
+move sv Lib
+move zh-Hans Lib
 move /Y *.dll Lib
 move /Y *.xml Lib</PostBuildEvent>
   </PropertyGroup>

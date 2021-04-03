@@ -149,7 +149,6 @@ namespace TR2RandoTracker.Windows
 
         private void ResetMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            Settings.Instance.Background = new SolidColorBrush(Colors.Red);
             _listView.ItemsSource = new LevelViewList();
         }
 
