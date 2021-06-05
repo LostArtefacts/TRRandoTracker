@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 using TR2RandoTracker.Core.Tracker;
 using TR2RandoTracker.Model;
 using TR2RandoTracker.Updates;
@@ -22,6 +21,8 @@ namespace TR2RandoTracker.Windows
 
             _listView.ItemsSource = new LevelViewList();
             _listView.DataContext = DataContext = Settings.Instance;
+
+            AllowsTransparency = _transparencyMenu.IsChecked = Settings.Instance.AllowTransparency;
 
             Top = Settings.Instance.Top;
             Left = Settings.Instance.Left;
@@ -177,6 +178,18 @@ namespace TR2RandoTracker.Windows
             ResizeMode = ResizeMode == ResizeMode.CanResizeWithGrip ? ResizeMode.NoResize : ResizeMode.CanResizeWithGrip;
             _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
             StoreWindowState();
+        }
+
+        private void TransparencyMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageWindow.ShowMessageWithCancel("This setting will take effect after the application is restarted."))
+            {
+                _transparencyMenu.IsChecked = Settings.Instance.AllowTransparency = !Settings.Instance.AllowTransparency;
+                StoreWindowState();
+
+                _transparencyMenu.IsEnabled = false;
+                _transparencyMenu.Header += " (pending restart)";                
+            }
         }
 
         private void StoreWindowState()

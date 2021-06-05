@@ -33,10 +33,22 @@ namespace TR2RandoTracker.Model
         private const double _defaultHeight = 486;
         private const bool _defaultOnTop = false;
         private const bool _defaultResizable = true;
+        private const bool _defaultAllowTransparency = false;
 
+        private bool _allowTransparency;
         private SolidColorBrush _background, _foreground, _separator;
         private double _top, _left, _width, _height;
         private bool _onTop, _resizable;
+
+        public bool AllowTransparency
+        {
+            get => _allowTransparency;
+            set
+            {
+                _allowTransparency = value;
+                FirePropertyChanged();
+            }
+        }
 
         public SolidColorBrush Background
         { 
@@ -132,6 +144,7 @@ namespace TR2RandoTracker.Model
 
         private Settings()
         {
+            AllowTransparency = _defaultAllowTransparency;
             Background = CreateBrush(_defaultBackground);
             Foreground = CreateBrush(_defaultForeground);
             Separator = CreateBrush(_defaultSeparator);
@@ -162,6 +175,10 @@ namespace TR2RandoTracker.Model
             if (File.Exists(configPath))
             {
                 Dictionary<string, object> data = JsonConvert.DeserializeObject<Dictionary<string, object>>(File.ReadAllText(configPath));
+                if (data.ContainsKey(nameof(AllowTransparency)))
+                {
+                    AllowTransparency = bool.Parse(data[nameof(AllowTransparency)].ToString());
+                }
                 if (data.ContainsKey(nameof(Background)))
                 {
                     Background = CreateBrush(data[nameof(Background)].ToString());
@@ -209,6 +226,7 @@ namespace TR2RandoTracker.Model
             ColorConverter cc = new ColorConverter();
             File.WriteAllText(configPath, JsonConvert.SerializeObject(new Dictionary<string, object>
             {
+                [nameof(AllowTransparency)] = AllowTransparency,
                 [nameof(Background)] = cc.ConvertToString(Background.Color),
                 [nameof(Foreground)] = cc.ConvertToString(Foreground.Color),
                 [nameof(Separator)] = cc.ConvertToString(Separator.Color),
