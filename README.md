@@ -21,9 +21,10 @@ _Install Steps_
 
 The main window can be dragged to your preferred location on-screen. Use the resize grip to make changes to the window size. Right-clicking anywhere on the main window will open a context menu as shown below.
 
-![Context Menu](https://github.com/lahm86/TR2RandoTracker/blob/main/Resources/ContextMenu.png)
+![Context Menu](https://github.com/lahm86/TR2RandoTracker/blob/main/Resources/ContextMenu093.png)
 
 * Colour Scheme - change the background colour (including transparency), foreground colour and level list separator colour.
+* Allow Transparency - change whether or not the main window supports transparency (for OBS/StreamLabs, this should be switched off).
 * Always On Top - if set, the main window will remain on top of all others.
 * Show Resize Grip - untick this option to remove the resize grip from the bottom right corner of the main window.
 * Reset Level List - manually clears the list of displayed levels.
