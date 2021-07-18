@@ -130,7 +130,19 @@ namespace TR2RandoTracker.Core.Tracker
                     }
                 }
 
-                Thread.Sleep(500);
+                int creditsFlag = _trackingProcess.Read<int>(_trackingExe.CreditsFlag);
+                if (currentLevel != -1 && creditsFlag == 1)
+                {
+                    FireCreditsReached();
+                    do
+                    {
+                        Thread.Sleep(500);
+                        creditsFlag = _trackingProcess.Read<int>(_trackingExe.CreditsFlag);
+                    }
+                    while (creditsFlag == 1 && _tracking && !_trackingProcess.HasExited);
+                }
+
+                Thread.Sleep(100);
             }
         }
 
@@ -163,29 +175,16 @@ namespace TR2RandoTracker.Core.Tracker
             e.CurrentLevel = currentLevel >= 0 && currentLevel < _scriptLevels.Count ? _scriptLevels[currentLevel] : null;
             e.CurrentSequence = currentLevel;
 
-            //if (currentLevel == 0)
-            //{
-            //    e.Status = TrackingStatus.TitleScreen;
-            //    e.Levels = _scriptLevels;
-            //    e.CurrentSequence = -1;
-            //}
-            //else
-            //{
-            //    currentLevel--;
-            //    if (currentLevel >= _scriptLevels.Count)
-            //    {
-            //        e.Status = TrackingStatus.InDemo;
-            //    }
-            //    else
-            //    {
-            //        e.Status = TrackingStatus.InLevel;
-            //        e.Levels = _scriptLevels;
-            //        e.CurrentLevel = _scriptLevels[currentLevel];
-            //        e.CurrentSequence = currentLevel;
-            //    }
-            //}
-
             TrackingChanged?.Invoke(this, e);
+        }
+
+        private void FireCreditsReached()
+        {
+            TrackingChanged.Invoke(this, new TrackingEventArgs
+            {
+                Exe = _trackingExe,
+                Status = TrackingStatus.Credits
+            });
         }
     }
 }

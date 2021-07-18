@@ -9,5 +9,7 @@
         internal override int TitleAddress => 0x11BDB0;
 
         internal override int LevelAddress => 0xD9ED0;
+
+        internal override int CreditsFlag => 0x11A21C;
     }
 }

@@ -6,6 +6,7 @@
         TitleScreen,
         InDemo,
         InLevel,
+        Credits,
         ExeStopped
     }
 }
