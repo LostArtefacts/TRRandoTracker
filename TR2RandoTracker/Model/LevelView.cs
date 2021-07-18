@@ -7,6 +7,7 @@ namespace TR2RandoTracker.Model
         public bool Visible { get; set; }
         public string LevelName => _level.Name;
         public int LevelSequence => _level.Sequence;
+        public bool IsFinalLevel => _level.IsFinalLevel;
         public bool Unarmed => _level.RemovesWeapons;
         public bool Ammoless => _level.RemovesAmmo;
 

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using TR2RandoTracker.Core.Tracker;
 using TR2RandoTracker.Model;
 using TR2RandoTracker.Updates;
@@ -12,8 +15,13 @@ namespace TR2RandoTracker.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static readonly string _timerFormat = @"hh\:mm\:ss";
+        private static readonly string _timerAltFormat = @"\.ff";
+
         private readonly Tomp2Tracker _tracker;
         private bool _autoUpdateMessageShown, _gameInProgress;
+        private readonly DispatcherTimer _timer;
+        private readonly Stopwatch _stopwatch;
 
         public MainWindow()
         {
@@ -22,16 +30,21 @@ namespace TR2RandoTracker.Windows
             _listView.ItemsSource = new LevelViewList();
             _listView.DataContext = DataContext = Settings.Instance;
 
-            AllowsTransparency = _transparencyMenu.IsChecked = Settings.Instance.AllowTransparency;
-
+            Settings.Instance.PropertyChanged += Settings_PropertyChanged;
+            // Must remain in constructor
+            AllowsTransparency = Settings.Instance.AllowTransparency;
+            Topmost = _onTopMenu.IsChecked = Settings.Instance.AlwaysOnTop;
+            ResizeMode = Settings.Instance.Resizable ? ResizeMode.CanResizeWithGrip : ResizeMode.NoResize;
+            _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
             Top = Settings.Instance.Top;
             Left = Settings.Instance.Left;
             Width = Settings.Instance.Width;
             Height = Settings.Instance.Height;
-
-            Topmost = _onTopMenu.IsChecked = Settings.Instance.AlwaysOnTop;
-            ResizeMode = Settings.Instance.Resizable ? ResizeMode.CanResizeWithGrip : ResizeMode.NoResize;
-            _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
+            
+            _timer = new DispatcherTimer();
+            _timer.Tick += Timer_Tick;
+            _timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            _stopwatch = new Stopwatch();
 
             _tracker = new Tomp2Tracker();
             _tracker.TrackingChanged += Tracker_TrackingChanged;
@@ -40,6 +53,26 @@ namespace TR2RandoTracker.Windows
             UpdateChecker.Instance.UpdateAvailable += UpdateChecker_UpdateAvailable;
 
             Application.Current.Exit += Application_Exit;
+        }
+
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "AlwaysOnTop":
+                    Topmost = _onTopMenu.IsChecked = Settings.Instance.AlwaysOnTop;
+                    break;
+                case "Resizable":
+                    ResizeMode = Settings.Instance.Resizable ? ResizeMode.CanResizeWithGrip : ResizeMode.NoResize;
+                    _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
+                    break;
+            }            
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            _timerLabel.Text = _stopwatch.Elapsed.ToString(_timerFormat);
+            _timerAltLabel.Text = _stopwatch.Elapsed.ToString(_timerAltFormat);
         }
 
         private void UpdateChecker_UpdateAvailable(object sender, UpdateEventArgs e)
@@ -79,16 +112,30 @@ namespace TR2RandoTracker.Windows
             switch (e.Status)
             {
                 case TrackingStatus.TitleScreen:
+                    _timer.Stop();
+                    _stopwatch.Stop();
                     _gameInProgress = true;
                     _resetMenu.IsEnabled = true;
                     _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
                     break;
                 case TrackingStatus.InLevel:
+                    if (!_timer.IsEnabled && e.CurrentSequence != -1)
+                    {
+                        _timer.Start();
+                        _stopwatch.Reset();
+                        _stopwatch.Start();
+                    }
                     _gameInProgress = true;
                     _resetMenu.IsEnabled = false;
                     _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
                     break;
+                case TrackingStatus.Credits:
+                    _timer.Stop();
+                    _stopwatch.Stop();
+                    break;
                 case TrackingStatus.ExeStopped:
+                    _timer.Stop();
+                    _stopwatch.Stop();
                     _gameInProgress = false;
                     _resetMenu.IsEnabled = true;
                     _listView.ItemsSource = new LevelViewList();
@@ -102,10 +149,15 @@ namespace TR2RandoTracker.Windows
             {
                 try
                 {
+                    Cursor = _timerBox.Cursor = Cursors.SizeAll;
                     DragMove();
                     StoreWindowState();
                 }
                 catch { }
+                finally
+                {
+                    Cursor = _timerBox.Cursor = Cursors.Arrow;
+                }
             }
         }
 
@@ -153,18 +205,10 @@ namespace TR2RandoTracker.Windows
             _listView.ItemsSource = new LevelViewList();
         }
 
-        private void ColourSchemeMenu_Click(object sender, RoutedEventArgs e)
-        {
-            ColourSchemeWindow csw = new ColourSchemeWindow();
-            if (csw.ShowDialog() ?? false)
-            {
-                Settings.Instance.Save();
-            }
-        }
-
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             StoreWindowState();
+            System.Diagnostics.Debug.WriteLine(Width + " " + Height);
         }
 
         private void AlwaysOnTopMenuItem_Click(object sender, RoutedEventArgs e)
@@ -180,15 +224,12 @@ namespace TR2RandoTracker.Windows
             StoreWindowState();
         }
 
-        private void TransparencyMenu_Click(object sender, RoutedEventArgs e)
+        private void SettingsMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageWindow.ShowMessageWithCancel("This setting will take effect after the application is restarted."))
+            SettingsWindow sw = new SettingsWindow();
+            if (sw.ShowDialog() ?? false)
             {
-                _transparencyMenu.IsChecked = Settings.Instance.AllowTransparency = !Settings.Instance.AllowTransparency;
-                StoreWindowState();
-
-                _transparencyMenu.IsEnabled = false;
-                _transparencyMenu.Header += " (pending restart)";                
+                Settings.Instance.Save();
             }
         }
 

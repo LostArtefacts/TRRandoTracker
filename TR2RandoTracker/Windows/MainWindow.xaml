@@ -18,13 +18,14 @@
     
     <Window.ContextMenu>
         <ContextMenu>
+            <MenuItem 
+                Header="Settings..."
+                Click="SettingsMenu_Click"/>
             <MenuItem
-                Header="Colour Scheme..."
-                Click="ColourSchemeMenu_Click"/>
-            <MenuItem
-                x:Name="_transparencyMenu"
-                Header="Allow transparency"
-                Click="TransparencyMenu_Click"/>
+                x:Name="_resetMenu"
+                Header="Reset Level List"
+                Click="ResetMenuItem_Click"/>
+            <Separator/>
             <MenuItem
                 x:Name="_onTopMenu"
                 Header="Always on Top"
@@ -33,11 +34,6 @@
                 x:Name="_resizeMenu"
                 Header="Show Resize Grip"
                 Click="ResizeMenuItem_Click"/>
-            <Separator/>
-            <MenuItem
-                x:Name="_resetMenu"
-                Header="Reset Level List"
-                Click="ResetMenuItem_Click"/>
             <Separator/>
             <MenuItem
                 Header="Check for Updates"
@@ -51,13 +47,126 @@
                 Click="ExitMenuItem_Click"/>
         </ContextMenu>
     </Window.ContextMenu>
+
+    <Window.Resources>
+        <Style TargetType="TextBlock" x:Key="TitleStyle">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="TextDecorations" Value="None"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ShowTitle}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ShowTitle}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding BoldTitle}" Value="True">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding BoldTitle}" Value="False">
+                    <Setter Property="FontWeight" Value="Normal"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ItalicTitle}" Value="True">
+                    <Setter Property="FontStyle" Value="Italic"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ItalicTitle}" Value="False">
+                    <Setter Property="FontStyle" Value="Normal"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding UnderlineTitle}" Value="True">
+                    <Setter Property="TextDecorations" Value="Underline"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding UnderlineTitle}" Value="False">
+                    <Setter Property="TextDecorations" Value="None"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ListView" x:Key="LevelStyle">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding BoldLevel}" Value="True">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding BoldLevel}" Value="False">
+                    <Setter Property="FontWeight" Value="Normal"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ItalicLevel}" Value="True">
+                    <Setter Property="FontStyle" Value="Italic"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ItalicLevel}" Value="False">
+                    <Setter Property="FontStyle" Value="Normal"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="RichTextBox" x:Key="TimerBoolToVis">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ShowTimer}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ShowTimer}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="Paragraph" x:Key="TimerStyle">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="TextDecorations" Value="None"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding BoldTimer}" Value="True">
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding BoldTimer}" Value="False">
+                    <Setter Property="FontWeight" Value="Normal"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ItalicTimer}" Value="True">
+                    <Setter Property="FontStyle" Value="Italic"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ItalicTimer}" Value="False">
+                    <Setter Property="FontStyle" Value="Normal"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding UnderlineTimer}" Value="True">
+                    <Setter Property="TextDecorations" Value="Underline"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding UnderlineTimer}" Value="False">
+                    <Setter Property="TextDecorations" Value="None"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            HorizontalAlignment="Stretch"
+            Background="Transparent"
+            Foreground="{Binding TitleForeground}"
+            FontSize="{Binding TitleSize}"
+            FontFamily="{Binding TitleFontFamily}"
+            Padding="5"
+            TextAlignment="{Binding TitleAlignment}"
+            Style="{StaticResource TitleStyle}"
+            Text="{Binding Title}"/>
+
         <ListView x:Name="_listView"
+                  Grid.Row="1"
                   MouseDown="Window_MouseDown"
                   Padding="5, 0"
                   Background="Transparent"
                   Foreground="{Binding Foreground}"
-                  FontSize="15"
+                  FontSize="{Binding LevelSize}"
+                  FontFamily="{Binding LevelFontFamily}"
+                  Style="{StaticResource LevelStyle}"
                   SelectionMode="Single"
                   ItemContainerStyle="{StaticResource UnstyledListViewItem}"
                   BorderThickness="0"
@@ -75,5 +184,35 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+
+        <RichTextBox
+            x:Name="_timerBox"
+            Grid.Row="2"
+            FontFamily="{Binding TimerFontFamily}"
+            IsReadOnly="True"
+            BorderThickness="0"
+            Focusable="False"
+            Foreground="{Binding TimerForeground}"
+            Background="Transparent"
+            Style="{StaticResource TimerBoolToVis}"
+            Margin="5"
+            Cursor="Arrow"
+            IsDocumentEnabled="False"
+            ContextMenu="{x:Null}">
+            <FlowDocument>
+                <Paragraph
+                    TextAlignment="{Binding TimerAlignment}"
+                    FontFamily="{Binding TimerFontFamily}"
+                    Style="{StaticResource TimerStyle}">
+                    <Run 
+                        x:Name="_timerLabel"
+                        FontSize="{Binding TimerSize}" 
+                        Text="00:00:00"/><Run 
+                        x:Name="_timerAltLabel"
+                        FontSize="{Binding TimerAltSize}"
+                        Text=".00"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>      
     </Grid>
 </Window>
