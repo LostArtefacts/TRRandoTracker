@@ -111,6 +111,7 @@
                 <TextBlock
                     x:Name="_placeholderBox"
                     Grid.Column="1"
+                    FontStyle="Italic"
                     Text="{Binding LevelPlaceholder}"
                     VerticalAlignment="Center"/>
 

@@ -70,6 +70,30 @@ namespace TR2RandoTracker.Model
             }
         }
 
+        private const bool _defaultUseBackgroundImage = false;
+        private bool _useBackgroundImage;
+        public bool UseBackgroundImage
+        {
+            get => _useBackgroundImage;
+            set
+            {
+                _useBackgroundImage = value;
+                FirePropertyChanged();
+            }
+        }
+
+        private const string _defaultBackgroundImage = "";
+        private string _backgroundImage;
+        public string BackgroundImage
+        {
+            get => _backgroundImage;
+            set
+            {
+                _backgroundImage = value;
+                FirePropertyChanged();
+            }
+        }
+
         private const double _defaultTop = 0;
         private double _top;
         public double Top
@@ -476,6 +500,8 @@ namespace TR2RandoTracker.Model
         {
             AllowTransparency = _defaultAllowTransparency;
             Background = CreateBrush(_defaultBackground);
+            UseBackgroundImage = _defaultUseBackgroundImage;
+            BackgroundImage = _defaultBackgroundImage;
             Top = _defaultTop;
             Left = _defaultLeft;
             Width = _defaultWidth;
@@ -541,6 +567,14 @@ namespace TR2RandoTracker.Model
                 if (data.ContainsKey(nameof(Background)))
                 {
                     Background = CreateBrush(data[nameof(Background)].ToString());
+                }
+                if (data.ContainsKey(nameof(UseBackgroundImage)))
+                {
+                    UseBackgroundImage = bool.Parse(data[nameof(UseBackgroundImage)].ToString());
+                }
+                if (data.ContainsKey(nameof(BackgroundImage)))
+                {
+                    BackgroundImage = data[nameof(BackgroundImage)].ToString();
                 }
                 if (data.ContainsKey(nameof(Top)))
                 {
@@ -701,6 +735,8 @@ namespace TR2RandoTracker.Model
             {
                 [nameof(AllowTransparency)] = AllowTransparency,
                 [nameof(Background)] = cc.ConvertToString(Background.Color),
+                [nameof(UseBackgroundImage)] = UseBackgroundImage,
+                [nameof(BackgroundImage)] = BackgroundImage,
                 [nameof(Top)] = Top,
                 [nameof(Left)] = Left,
                 [nameof(Width)] = Width,
@@ -717,7 +753,7 @@ namespace TR2RandoTracker.Model
                 [nameof(UnderlineTitle)] = UnderlineTitle,
                 [nameof(TitleFontFamily)] = TitleFontFamily.Source,
                 [nameof(TitleAlignment)] = TitleAlignment,
-                                
+
                 [nameof(Foreground)] = cc.ConvertToString(Foreground.Color),
                 [nameof(LevelSize)] = LevelSize,
                 [nameof(BoldLevel)] = BoldLevel,

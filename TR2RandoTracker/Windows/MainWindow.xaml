@@ -25,6 +25,9 @@
                 x:Name="_resetMenu"
                 Header="Reset Level List"
                 Click="ResetMenuItem_Click"/>
+            <MenuItem
+                Header="Reset Timer"
+                Click="ResetTimerMenuItem_Click"/>
             <Separator/>
             <MenuItem
                 x:Name="_onTopMenu"
@@ -139,8 +142,9 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    
-    <Grid>
+
+    <Grid
+        x:Name="_mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

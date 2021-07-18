@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -104,6 +105,29 @@ namespace TR2RandoTracker.Windows
         {
             Settings.Instance.SetFromDictionary(_defaultSettings);
             DialogResult = false;
+        }
+
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            string path = Settings.Instance.BackgroundImage;
+            string initDir;
+            if (System.IO.File.Exists(path))
+            {
+                initDir = System.IO.Path.GetDirectoryName(Settings.Instance.BackgroundImage);
+            }
+            else
+            {
+                initDir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif",
+                InitialDirectory = initDir
+            };
+            if (ofd.ShowDialog(this) ?? false)
+            {
+                _imageBox.Text = ofd.FileName;
+            }
         }
     }
 }

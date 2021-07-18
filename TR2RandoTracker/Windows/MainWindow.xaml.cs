@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using TR2RandoTracker.Core.Tracker;
 using TR2RandoTracker.Model;
@@ -32,14 +35,7 @@ namespace TR2RandoTracker.Windows
 
             Settings.Instance.PropertyChanged += Settings_PropertyChanged;
             // Must remain in constructor
-            AllowsTransparency = Settings.Instance.AllowTransparency;
-            Topmost = _onTopMenu.IsChecked = Settings.Instance.AlwaysOnTop;
-            ResizeMode = Settings.Instance.Resizable ? ResizeMode.CanResizeWithGrip : ResizeMode.NoResize;
-            _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
-            Top = Settings.Instance.Top;
-            Left = Settings.Instance.Left;
-            Width = Settings.Instance.Width;
-            Height = Settings.Instance.Height;
+            InitialiseLayout();
             
             _timer = new DispatcherTimer();
             _timer.Tick += Timer_Tick;
@@ -55,16 +51,56 @@ namespace TR2RandoTracker.Windows
             Application.Current.Exit += Application_Exit;
         }
 
+        private void InitialiseLayout()
+        {
+            AllowsTransparency = Settings.Instance.AllowTransparency;
+            Topmost = _onTopMenu.IsChecked = Settings.Instance.AlwaysOnTop;
+            ResizeMode = Settings.Instance.Resizable ? ResizeMode.CanResizeWithGrip : ResizeMode.NoResize;
+            _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
+            Top = Settings.Instance.Top;
+            Left = Settings.Instance.Left;
+            Width = Settings.Instance.Width;
+            Height = Settings.Instance.Height;
+
+            SetBackgroundImage();
+        }
+
+        private void SetBackgroundImage()
+        {
+            if (Settings.Instance.UseBackgroundImage)
+            {
+                try
+                {
+                    string path = Path.GetFullPath(Settings.Instance.BackgroundImage);
+                    if (File.Exists(path))
+                    {
+                        _mainGrid.Background = new ImageBrush(new BitmapImage(new Uri(path)))
+                        {
+                            Stretch = Stretch.None
+                        };
+                        return;
+                    }
+                }
+                catch { }
+            }
+            
+            _mainGrid.Background = null;
+        }
+
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case "AlwaysOnTop":
+                case nameof(Settings.Instance.AlwaysOnTop):
                     Topmost = _onTopMenu.IsChecked = Settings.Instance.AlwaysOnTop;
                     break;
-                case "Resizable":
+                case nameof(Settings.Instance.Resizable):
                     ResizeMode = Settings.Instance.Resizable ? ResizeMode.CanResizeWithGrip : ResizeMode.NoResize;
                     _resizeMenu.IsChecked = ResizeMode == ResizeMode.CanResizeWithGrip;
+                    break;
+                case nameof(Settings.Instance.UseBackgroundImage):
+                case nameof(Settings.Instance.BackgroundImage):
+                    SetBackgroundImage();
                     break;
             }            
         }
@@ -230,6 +266,21 @@ namespace TR2RandoTracker.Windows
             if (sw.ShowDialog() ?? false)
             {
                 Settings.Instance.Save();
+            }
+        }
+
+        private void ResetTimerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            bool isRunning = _stopwatch.IsRunning;
+            _stopwatch.Reset();            
+            if (isRunning)
+            {
+                _stopwatch.Start();
+            }
+            else
+            {
+                _timerLabel.Text = "00:00:00";
+                _timerAltLabel.Text = ".00";
             }
         }
 
