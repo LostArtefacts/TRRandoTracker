@@ -29,7 +29,7 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <GroupBox
@@ -132,13 +132,13 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <CheckBox
@@ -272,6 +272,8 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
@@ -291,6 +293,7 @@
                     <xctk:ColorPicker 
                         Margin="10,0,0,10"
                         Grid.Column="1"
+                        Grid.ColumnSpan="3"
                         VerticalAlignment="Center"
                         x:Name="_foregroundPicker" 
                         SelectedColorChanged="ForegroundPicker_SelectedColorChanged" />
@@ -312,6 +315,24 @@
                         Value="{Binding LevelSize, Mode=TwoWay}"/>
 
                     <Label 
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Content="Index Width"
+                        Padding="0,3,0,0"
+                        VerticalAlignment="Top"/>
+
+                    <c:NumericUpDown
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Margin="10,0,0,6"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Width="80"
+                        MinValue="0"
+                        MaxValue="10000"
+                        Value="{Binding IndexWidth, Mode=TwoWay}"/>
+
+                    <Label 
                         Grid.Row="2"
                         Content="Font Style"
                         Padding="0,3,0,0"
@@ -320,6 +341,7 @@
                     <StackPanel
                         Grid.Row="2"
                         Grid.Column="1"
+                        Grid.ColumnSpan="3"
                         Margin="10,4,0,10"
                         Orientation="Horizontal">
                         <CheckBox
@@ -331,10 +353,6 @@
                             Content="Italic"
                             Margin="0,0,10,0"
                             IsChecked="{Binding ItalicLevel, Mode=TwoWay}"/>
-
-                        <!--<CheckBox
-                            Content="Underline"
-                            IsChecked="{Binding UnderlineLevel, Mode=TwoWay}"/>-->
                     </StackPanel>
 
                     <Label 
@@ -346,6 +364,7 @@
                     <ComboBox
                         Grid.Row="3"
                         Grid.Column="1"
+                        Grid.ColumnSpan="3"
                         Margin="10,0,0,10"
                         ItemsSource="{Binding FontFamilyOptions}"
                         SelectedItem="{Binding LevelFontFamily}"/>
@@ -360,6 +379,7 @@
                         Grid.Row="4"
                         Margin="10,0,0,10"
                         Grid.Column="1"
+                        Grid.ColumnSpan="3"
                         VerticalAlignment="Center"
                         x:Name="_separatorPicker" 
                         SelectedColorChanged="SeparatorPicker_SelectedColorChanged" />
@@ -373,6 +393,7 @@
                     <TextBox
                         Grid.Row="5"
                         Grid.Column="1"
+                        Grid.ColumnSpan="3"
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"
                         Text="{Binding LevelPlaceholder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -394,13 +415,13 @@
                     </Grid.ColumnDefinitions>
 
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <CheckBox

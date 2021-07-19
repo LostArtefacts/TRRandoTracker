@@ -69,7 +69,7 @@ namespace TR2RandoTracker.Controls
             InitializeComponent();
             _border.DataContext = Settings.Instance;
             _content.DataContext = this;
-            _placeholderBox.DataContext = Settings.Instance;
+            _visIndexCol.DataContext = _hidIndexCol.DataContext = _placeholderBox.DataContext = Settings.Instance;
         }
     }
 }

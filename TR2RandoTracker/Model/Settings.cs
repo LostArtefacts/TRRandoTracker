@@ -295,6 +295,18 @@ namespace TR2RandoTracker.Model
             }
         }
 
+        private const int _defaultIndexWidth = 21;
+        private int _indexWidth;
+        public int IndexWidth
+        {
+            get => _indexWidth;
+            set
+            {
+                _indexWidth = value;
+                FirePropertyChanged();
+            }
+        }
+
         private const int _defaultLevelSize = 15;
         private int _levelSize;
         public int LevelSize
@@ -331,18 +343,6 @@ namespace TR2RandoTracker.Model
                 FirePropertyChanged();
             }
         }
-
-        //private const bool _defaultLevelUnderline = false;
-        //private bool _levelUnderline;
-        //public bool UnderlineLevel
-        //{
-        //    get => _levelUnderline;
-        //    set
-        //    {
-        //        _levelUnderline = value;
-        //        FirePropertyChanged();
-        //    }
-        //}
 
         private static readonly FontFamily _defaultLevelFontFamily = new FontFamily("Segoe UI");
         private FontFamily _levelFontFamily;
@@ -520,10 +520,10 @@ namespace TR2RandoTracker.Model
             TitleAlignment = _defaultTitleAlignment;
 
             Foreground = CreateBrush(_defaultForeground);
+            IndexWidth = _defaultIndexWidth;
             LevelSize = _defaultLevelSize;
             BoldLevel = _defaultLevelBold;
             ItalicLevel = _defaultLevelItalic;
-            //UnderlineLevel = _defaultLevelUnderline;
             LevelFontFamily = _defaultLevelFontFamily;
             LevelPlaceholder = _defaultPlaceholder;
             Separator = CreateBrush(_defaultSeparator);
@@ -650,6 +650,10 @@ namespace TR2RandoTracker.Model
                 {
                     Foreground = CreateBrush(data[nameof(Foreground)].ToString());
                 }
+                if (data.ContainsKey(nameof(IndexWidth)))
+                {
+                    IndexWidth = int.Parse(data[nameof(IndexWidth)].ToString());
+                }
                 if (data.ContainsKey(nameof(LevelSize)))
                 {
                     LevelSize = int.Parse(data[nameof(LevelSize)].ToString());
@@ -662,10 +666,6 @@ namespace TR2RandoTracker.Model
                 {
                     ItalicLevel = bool.Parse(data[nameof(ItalicLevel)].ToString());
                 }
-                //if (data.ContainsKey(nameof(UnderlineLevel)))
-                //{
-                //    UnderlineLevel = bool.Parse(data[nameof(ItalicLevel)].ToString());
-                //}
                 if (data.ContainsKey(nameof(LevelFontFamily)))
                 {
                     LevelFontFamily = new FontFamily(data[nameof(LevelFontFamily)].ToString());
@@ -755,10 +755,10 @@ namespace TR2RandoTracker.Model
                 [nameof(TitleAlignment)] = TitleAlignment,
 
                 [nameof(Foreground)] = cc.ConvertToString(Foreground.Color),
+                [nameof(IndexWidth)] = IndexWidth,
                 [nameof(LevelSize)] = LevelSize,
                 [nameof(BoldLevel)] = BoldLevel,
                 [nameof(ItalicLevel)] = ItalicLevel,
-                //[nameof(UnderlineLevel)] = UnderlineLevel,
                 [nameof(LevelFontFamily)] = LevelFontFamily.Source,
                 [nameof(LevelPlaceholder)] = LevelPlaceholder,
                 [nameof(Separator)] = cc.ConvertToString(Separator.Color),
