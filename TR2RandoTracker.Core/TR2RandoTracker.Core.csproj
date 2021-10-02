@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ProcessExtensions.cs" />
+    <Compile Include="Extensions\TRScriptExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tomp2\AbstractTomp2Exe.cs" />
     <Compile Include="Tomp2\Exes\Tomp2EPC.cs" />

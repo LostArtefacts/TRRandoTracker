@@ -1,11 +1,12 @@
-﻿using TRGE.Core;
+﻿using TR2RandoTracker.Core.Extensions;
+using TRGE.Core;
 
 namespace TR2RandoTracker.Model
 {
     public class LevelView
     {
         public bool Visible { get; set; }
-        public string LevelName => _level.Name;
+        public string LevelName { get; private set; }
         public int LevelSequence => _level.Sequence;
         public bool IsFinalLevel => _level.IsFinalLevel;
         public bool Unarmed => _level.RemovesWeapons;
@@ -16,6 +17,7 @@ namespace TR2RandoTracker.Model
         public LevelView(TR23ScriptedLevel level)
         {
             _level = level;
+            LevelName = _level.GetDecodedName();
         }
     }
 }
