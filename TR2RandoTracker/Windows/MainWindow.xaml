@@ -14,7 +14,7 @@
         Background="{Binding Background}"
         WindowStartupLocation="Manual"
         Icon="..\Resources\clipboard.ico"
-        Title="TR2 Rando Tracker" Height="486" Width="300" Left="0" Top="0">
+        Title="TR Rando Tracker" Height="486" Width="300" Left="0" Top="0">
     
     <Window.ContextMenu>
         <ContextMenu>
@@ -42,7 +42,7 @@
                 Header="Check for Updates"
                 Click="UpdatesMenuItem_Click"/>
             <MenuItem
-                Header="About TR2 Rando Tracker"
+                Header="About TR Rando Tracker"
                 Click="AboutMenuItem_Click"/>
             <Separator/>
             <MenuItem

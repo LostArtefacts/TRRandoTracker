@@ -182,7 +182,7 @@ namespace TR2RandoTracker.Model
             }
         }
 
-        private const string _defaultTitle = "TR II Randomizer";
+        private const string _defaultTitle = "TR Randomizer";
         private string _title;
         public string Title
         {

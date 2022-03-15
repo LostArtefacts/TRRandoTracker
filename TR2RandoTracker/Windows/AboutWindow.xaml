@@ -11,7 +11,7 @@
         WindowStartupLocation="CenterScreen"
         ShowInTaskbar="False"
         Loaded="Window_Loaded"
-        Title="About TR2 Rando Tracker" Height="250" Width="550">
+        Title="About TR Rando Tracker" Height="250" Width="550">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
