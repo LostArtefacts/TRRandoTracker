@@ -7,7 +7,7 @@ namespace TR2RandoTracker.Model
 {
     public class LevelViewList : List<LevelView>
     {
-        public static LevelViewList Get(IReadOnlyList<TR23ScriptedLevel> allLevels, int currentLevel)
+        public static LevelViewList Get(IReadOnlyList<TR2ScriptedLevel> allLevels, int currentLevel)
         {
             LevelViewList list = new LevelViewList();
             for (int i = 0; i < allLevels.Count; i++)

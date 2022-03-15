@@ -23,7 +23,7 @@ namespace TR2RandoTracker.Core.Tracker
 
         public event EventHandler<TrackingEventArgs> TrackingChanged;
 
-        private List<TR23ScriptedLevel> _scriptLevels;
+        private List<TR2ScriptedLevel> _scriptLevels;
 
         public Tomp2Tracker()
         {
@@ -98,7 +98,7 @@ namespace TR2RandoTracker.Core.Tracker
                     Thread.Sleep(1000); // try to allow the game to access the dat file first
                     File.Copy(datFile, tmpDatFile, true);
                     TR23Script script = TRScriptFactory.OpenScript(tmpDatFile) as TR23Script;
-                    _scriptLevels = script.Levels.Cast<TR23ScriptedLevel>().ToList();
+                    _scriptLevels = script.Levels.Cast<TR2ScriptedLevel>().ToList();
                 }
                 finally
                 {

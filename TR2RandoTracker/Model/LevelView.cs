@@ -12,9 +12,9 @@ namespace TR2RandoTracker.Model
         public bool Unarmed => _level.RemovesWeapons;
         public bool Ammoless => _level.RemovesAmmo;
 
-        private readonly TR23ScriptedLevel _level;
+        private readonly TR2ScriptedLevel _level;
 
-        public LevelView(TR23ScriptedLevel level)
+        public LevelView(TR2ScriptedLevel level)
         {
             _level = level;
             LevelName = _level.GetDecodedName();

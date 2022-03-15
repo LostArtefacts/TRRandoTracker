@@ -5,7 +5,7 @@ namespace TR2RandoTracker.Core.Extensions
 {
     public static class TRScriptExtensions
     {
-        public static string GetDecodedName(this TR23ScriptedLevel level)
+        public static string GetDecodedName(this TR2ScriptedLevel level)
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < level.Name.Length; i++)
