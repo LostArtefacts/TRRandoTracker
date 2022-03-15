@@ -8,7 +8,7 @@ namespace TR2RandoTracker.Core.Tomp2
     {
         private static readonly List<AbstractTomp2Exe> _exes = new List<AbstractTomp2Exe>
         {
-            new Tomp2EPC(), new Tomp2German(), new Tomp2Japanese(), new Tomp2Multipatch(), new Tomp2UKBox()
+            new Tomp2EPC(), new Tomp2German(), new Tomp2Japanese(), new Tomp2Multipatch(), new Tomp2UKBox(), new Tomp2CDPatch()
         };
 
         public static AbstractTomp2Exe Get(byte[] identifier)
