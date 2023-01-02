@@ -1,5 +1,5 @@
-# TR2 Randomizer Tracker
-TRRandoTracker keeps track of the levels that Lara has completed while playing the [TR2 Randomizer](https://github.com/DanzaG/TR2-Rando). The tracker will also show icons if a level is unarmed or ammoless. There are no spoilers - the list updates in real-time during game play, so you will not find out which level comes next, or its armed/unarmed/ammoless state until that level starts. See the screenshots at the end of this page for some examples.
+# TR Randomizer Tracker
+TRRandoTracker keeps track of the levels that Lara has completed while playing the [TR Randomizer](https://github.com/DanzaG/TR2-Rando). The tracker will also show icons if a level is unarmed or ammoless. There are no spoilers - the list updates in real-time during game play, so you will not find out which level comes next, or its armed/unarmed/ammoless state until that level starts. See the screenshots at the end of this page for some examples.
 
 # Thanks
 * FluxMonkii, Supergamer57, MidgeOnTwitch - for the relevant memory addresses for each TR2 exe, and the way to detect which exe is running. This is based on the [TR II Autosplitter for Livesplit](https://raw.githubusercontent.com/FluxMonkii/Autosplitters/master/TombRaiderII.asl). 
@@ -43,7 +43,7 @@ The main window can be dragged to your preferred location on-screen. Use the res
 * Exit - close the TRRandoTracker application.
 
 # Playing the Randomizer
-You can leave the main tracker window open while you stop and start TR2 - it will detect the executable starting and stopping. You can also randomize freely without closing and reopening the tracker.
+You can leave the main tracker window open while you stop and start Tomb Raider - it will detect the executable starting and stopping. You can also randomize freely without closing and reopening the tracker.
 
 To exit the tracker, right-click anywhere in the main window and choose Exit.
 
