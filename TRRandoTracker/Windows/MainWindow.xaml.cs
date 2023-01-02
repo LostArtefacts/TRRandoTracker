@@ -213,7 +213,7 @@ namespace TRRandoTracker.Windows
                 }
                 else
                 {
-                    MessageWindow.ShowMessage("The current version of TR2 Rando Tracker is up to date.");
+                    MessageWindow.ShowMessage("The current version of TR Rando Tracker is up to date.");
                 }
             }
             catch (Exception ex)
