@@ -27,7 +27,7 @@ namespace TRRandoTracker.Core.Tracker
 
         public TompTracker()
         {
-            _watcher = new ProcessWatcher("tomb1main", "tomb2", "tomb3");
+            _watcher = new ProcessWatcher("tomb1main", "tomb2"/*, "tomb3"*/);
             _watcher.ProcessStarted += Watcher_ProcessStarted;
             _watcher.ProcessStopped += Watcher_ProcessStopped;
 
