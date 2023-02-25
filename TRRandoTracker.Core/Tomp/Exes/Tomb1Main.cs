@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using TRGE.Core;
 using TRRandoTracker.Core.Tracker;
@@ -13,8 +14,9 @@ namespace TRRandoTracker.Core.Tomp.Exes
 
         internal override int TitleAddress => 0x11BD90;
 
-        internal override int LevelAddress => 0x805FAA; //2.12
-        internal override int LevelCompleteAddress => 0xC57449;
+        private int _levelAddress, _completeAddress;
+        internal override int LevelAddress => _levelAddress;
+        internal override int LevelCompleteAddress => _completeAddress;
 
         internal override int CreditsFlag => 0x11A1FC;
 
@@ -22,6 +24,17 @@ namespace TRRandoTracker.Core.Tomp.Exes
 
         internal override ITracker CreateTracker(Process process, List<AbstractTRScriptedLevel> levels)
         {
+            Version version = CalculateProductVersion(process.MainModule.FileName);
+            if (version != null && version >= new Version(2, 13))
+            {
+                _levelAddress = 0x808F8A;
+                _completeAddress = 0xC5A509;
+            }
+            else
+            {
+                _levelAddress = 0x805FAA;
+                _completeAddress = 0xC57449;
+            }
             return new Tomb1MainTracker(this, process , levels);
         }
     }
