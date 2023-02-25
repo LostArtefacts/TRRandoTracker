@@ -11,8 +11,8 @@ using System.Windows;
 [assembly: AssemblyDescription("Tracks completed levels when playing TR Randomizer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tomp Community")]
-[assembly: AssemblyProduct("TRRandoTracker v1.0.0")]
-[assembly: AssemblyCopyright("Copyright © Tomp Community 2022")]
+[assembly: AssemblyProduct("TRRandoTracker v1.1.0")]
+[assembly: AssemblyCopyright("Copyright © Tomp Community 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyFileVersion("1.1.0.0")]
