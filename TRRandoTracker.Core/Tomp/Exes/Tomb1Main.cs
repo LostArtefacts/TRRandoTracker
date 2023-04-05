@@ -24,16 +24,23 @@ namespace TRRandoTracker.Core.Tomp.Exes
 
         internal override ITracker CreateTracker(Process process, List<AbstractTRScriptedLevel> levels)
         {
+            // 2.11 minimum version
+            _levelAddress = 0x805FAA;
+            _completeAddress = 0xC57449;
+            
             Version version = CalculateProductVersion(process.MainModule.FileName);
-            if (version != null && version >= new Version(2, 13))
+            if (version != null)
             {
-                _levelAddress = 0x808F8A;
-                _completeAddress = 0xC5A509;
-            }
-            else
-            {
-                _levelAddress = 0x805FAA;
-                _completeAddress = 0xC57449;
+                if (version >= new Version(2, 14))
+                {
+                    _levelAddress = 0x809F8A;
+                    _completeAddress = 0xC5C509;
+                }
+                else if (version >= new Version(2, 13))
+                {
+                    _levelAddress = 0x808F8A;
+                    _completeAddress = 0xC5A509;
+                }
             }
             return new Tomb1MainTracker(this, process , levels);
         }

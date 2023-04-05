@@ -29,7 +29,7 @@ namespace TRRandoTracker.Core.Tracker
                 return;
             }
 
-            Level = _process.Read<int>(_trackingExe.LevelAddress);
+            Level = _process.Read<short>(_trackingExe.LevelAddress);
             if (Level < 0 || Level > (_levels.Count + _cutscenes.Count))
             {
                 IsTitle = true;
