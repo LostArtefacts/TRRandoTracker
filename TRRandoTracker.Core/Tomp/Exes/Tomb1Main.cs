@@ -31,7 +31,12 @@ namespace TRRandoTracker.Core.Tomp.Exes
             Version version = CalculateProductVersion(process.MainModule.FileName);
             if (version != null)
             {
-                if (version >= new Version(2, 14))
+                if (version >= new Version(2, 15))
+                {
+                    _levelAddress = 0x80CFEA;
+                    _completeAddress = 0xC5F509;
+                }
+                else if (version >= new Version(2, 14))
                 {
                     _levelAddress = 0x809F8A;
                     _completeAddress = 0xC5C509;
