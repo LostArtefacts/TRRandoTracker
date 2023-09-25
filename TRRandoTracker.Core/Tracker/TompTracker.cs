@@ -1,162 +1,157 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
+﻿using System.Diagnostics;
 using TRGE.Core;
 using TRRandoTracker.Core.Extensions;
 using TRRandoTracker.Core.Tomp;
 using TRRandoTracker.Core.Watcher;
 
-namespace TRRandoTracker.Core.Tracker
+namespace TRRandoTracker.Core.Tracker;
+
+public class TompTracker
 {
-    public class TompTracker
+    private static readonly int _exeIDAddress = 0x88;
+
+    private readonly ProcessWatcher _watcher;
+
+    private ITracker _tracker;
+    private AbstractTompExe _trackingExe;
+    private Process _trackingProcess;
+    private volatile bool _tracking;
+
+    public event EventHandler<TrackingEventArgs> TrackingChanged;
+
+    private List<AbstractTRScriptedLevel> _scriptLevels;
+
+    public TompTracker()
     {
-        private static readonly int _exeIDAddress = 0x88;
+        _watcher = new ProcessWatcher("tomb1main", "tomb2"/*, "tomb3"*/);
+        _watcher.ProcessStarted += Watcher_ProcessStarted;
+        _watcher.ProcessStopped += Watcher_ProcessStopped;
 
-        private readonly ProcessWatcher _watcher;
+        _tracking = false;
+        _watcher.Start();
+    }
 
-        private ITracker _tracker;
-        private AbstractTompExe _trackingExe;
-        private Process _trackingProcess;
-        private volatile bool _tracking;
+    public void Stop()
+    {
+        _tracking = false;
+        _watcher.Stop();
+    }
 
-        public event EventHandler<TrackingEventArgs> TrackingChanged;
-
-        private List<AbstractTRScriptedLevel> _scriptLevels;
-
-        public TompTracker()
+    private void Watcher_ProcessStarted(object sender, ProcessEventArgs e)
+    {
+        string checksum = new FileInfo(e.Process.MainModule.FileName).Checksum();
+        AbstractTompExe exe = TompExeFactory.Get(e.Process.ProcessName, e.Process.ReadBytes(_exeIDAddress, 3), checksum);
+        if (exe != null)
         {
-            _watcher = new ProcessWatcher("tomb1main", "tomb2"/*, "tomb3"*/);
-            _watcher.ProcessStarted += Watcher_ProcessStarted;
-            _watcher.ProcessStopped += Watcher_ProcessStopped;
-
-            _tracking = false;
-            _watcher.Start();
-        }
-
-        public void Stop()
-        {
-            _tracking = false;
-            _watcher.Stop();
-        }
-
-        private void Watcher_ProcessStarted(object sender, ProcessEventArgs e)
-        {
-            string checksum = new FileInfo(e.Process.MainModule.FileName).Checksum();
-            AbstractTompExe exe = TompExeFactory.Get(e.Process.ProcessName, e.Process.ReadBytes(_exeIDAddress, 3), checksum);
-            if (exe != null)
+            if (!LoadScriptLevels(e.Process, exe))
             {
-                if (!LoadScriptLevels(e.Process, exe))
-                {
-                    return;
-                }
-
-                TrackingChanged?.Invoke(this, new TrackingEventArgs
-                {
-                    Exe = _trackingExe = exe,
-                    Status = TrackingStatus.ExeStarted,
-                    Levels = _scriptLevels
-                });
-
-                _trackingProcess = e.Process;
-                _tracking = true;
-                new Thread(TrackLevels).Start();
+                return;
             }
-        }
 
-        private void Watcher_ProcessStopped(object sender, ProcessEventArgs e)
-        {
-            if (_trackingExe != null)
+            TrackingChanged?.Invoke(this, new TrackingEventArgs
             {
-                TrackingChanged?.Invoke(this, new TrackingEventArgs
-                {
-                    Exe = _trackingExe,
-                    Status = TrackingStatus.ExeStopped
-                });
+                Exe = _trackingExe = exe,
+                Status = TrackingStatus.ExeStarted,
+                Levels = _scriptLevels
+            });
 
-                _trackingProcess = null;
-                _tracking = false;
-                _trackingExe = null;
-            }
+            _trackingProcess = e.Process;
+            _tracking = true;
+            new Thread(TrackLevels).Start();
         }
+    }
 
-        private bool LoadScriptLevels(Process process, AbstractTompExe exe)
+    private void Watcher_ProcessStopped(object sender, ProcessEventArgs e)
+    {
+        if (_trackingExe != null)
         {
-            string datFile = Path.Combine(Path.GetDirectoryName(process.MainModule.FileName), exe.ScriptPath);
-            if (File.Exists(datFile))
-            {
-                string tmpDatFile = Path.GetTempFileName() + Path.GetExtension(datFile);
-                try
-                {
-                    Thread.Sleep(1000); // try to allow the game to access the dat file first
-                    File.Copy(datFile, tmpDatFile, true);
-                    _scriptLevels = TRScriptFactory.OpenScript(tmpDatFile).Levels;
-                }
-                finally
-                {
-                    if (File.Exists(tmpDatFile))
-                    {
-                        File.Delete(tmpDatFile);
-                    }
-                }
-
-                _tracker = exe.CreateTracker(process, _scriptLevels);
-
-                return true;
-            }
-            return false;
-        }
-
-        private void TrackLevels()
-        {
-            int currentLevel = -1, level;
-            bool currentTitle = false, titleScreen, creditsScreen;
-
-            while (_tracking && !_trackingProcess.HasExited)
-            {
-                _tracker.Track();
-
-                level = _tracker.Level;
-                titleScreen = _tracker.IsTitle;
-                creditsScreen = _tracker.IsCredits;
-
-                if (_tracker.InterpretLevel(level))
-                {
-                    if (level != currentLevel || titleScreen != currentTitle)
-                    {
-                        FireLevelChanged(currentLevel = level, currentTitle = titleScreen);
-                    }
-                }
-
-                if (currentLevel != -1 && creditsScreen)
-                {
-                    FireCreditsReached();
-                    do
-                    {
-                        Thread.Sleep(500);
-                        _tracker.Track();
-                        creditsScreen = _tracker.IsCredits;
-                    }
-                    while (creditsScreen && _tracking && !_trackingProcess.HasExited);
-                }
-
-                Thread.Sleep(100);
-            }
-        }
-
-        private void FireLevelChanged(int currentLevel, bool titleScreen)
-        {
-            TrackingChanged?.Invoke(this, _tracker.GetLevelArgs(currentLevel, titleScreen));
-        }
-
-        private void FireCreditsReached()
-        {
-            TrackingChanged.Invoke(this, new TrackingEventArgs
+            TrackingChanged?.Invoke(this, new TrackingEventArgs
             {
                 Exe = _trackingExe,
-                Status = TrackingStatus.Credits
+                Status = TrackingStatus.ExeStopped
             });
+
+            _trackingProcess = null;
+            _tracking = false;
+            _trackingExe = null;
         }
+    }
+
+    private bool LoadScriptLevels(Process process, AbstractTompExe exe)
+    {
+        string datFile = Path.Combine(Path.GetDirectoryName(process.MainModule.FileName), exe.ScriptPath);
+        if (File.Exists(datFile))
+        {
+            string tmpDatFile = Path.GetTempFileName() + Path.GetExtension(datFile);
+            try
+            {
+                Thread.Sleep(1000); // try to allow the game to access the dat file first
+                File.Copy(datFile, tmpDatFile, true);
+                _scriptLevels = TRScriptFactory.OpenScript(tmpDatFile).Levels;
+            }
+            finally
+            {
+                if (File.Exists(tmpDatFile))
+                {
+                    File.Delete(tmpDatFile);
+                }
+            }
+
+            _tracker = exe.CreateTracker(process, _scriptLevels);
+
+            return true;
+        }
+        return false;
+    }
+
+    private void TrackLevels()
+    {
+        int currentLevel = -1, level;
+        bool currentTitle = false, titleScreen, creditsScreen;
+
+        while (_tracking && !_trackingProcess.HasExited)
+        {
+            _tracker.Track();
+
+            level = _tracker.Level;
+            titleScreen = _tracker.IsTitle;
+            creditsScreen = _tracker.IsCredits;
+
+            if (_tracker.InterpretLevel(level))
+            {
+                if (level != currentLevel || titleScreen != currentTitle)
+                {
+                    FireLevelChanged(currentLevel = level, currentTitle = titleScreen);
+                }
+            }
+
+            if (currentLevel != -1 && creditsScreen)
+            {
+                FireCreditsReached();
+                do
+                {
+                    Thread.Sleep(500);
+                    _tracker.Track();
+                    creditsScreen = _tracker.IsCredits;
+                }
+                while (creditsScreen && _tracking && !_trackingProcess.HasExited);
+            }
+
+            Thread.Sleep(100);
+        }
+    }
+
+    private void FireLevelChanged(int currentLevel, bool titleScreen)
+    {
+        TrackingChanged?.Invoke(this, _tracker.GetLevelArgs(currentLevel, titleScreen));
+    }
+
+    private void FireCreditsReached()
+    {
+        TrackingChanged.Invoke(this, new TrackingEventArgs
+        {
+            Exe = _trackingExe,
+            Status = TrackingStatus.Credits
+        });
     }
 }

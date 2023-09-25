@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
-namespace TRRandoTracker.Core.Watcher
+namespace TRRandoTracker.Core.Watcher;
+
+public class ProcessEventArgs : EventArgs
 {
-    public class ProcessEventArgs : EventArgs
-    {
-        public Process Process { get; set; }
-    }
+    public Process Process { get; set; }
 }

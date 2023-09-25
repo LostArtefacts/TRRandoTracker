@@ -1,12 +1,11 @@
-﻿namespace TRRandoTracker.Core.Tracker
+﻿namespace TRRandoTracker.Core.Tracker;
+
+public enum TrackingStatus
 {
-    public enum TrackingStatus
-    {
-        ExeStarted,
-        TitleScreen,
-        InDemo,
-        InLevel,
-        Credits,
-        ExeStopped
-    }
+    ExeStarted,
+    TitleScreen,
+    InDemo,
+    InLevel,
+    Credits,
+    ExeStopped
 }

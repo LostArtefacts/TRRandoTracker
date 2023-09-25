@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 using TRGE.Core;
 
-namespace TRRandoTracker.Model
+namespace TRRandoTracker.Model;
+
+public class LevelViewList : List<LevelView>
 {
-    public class LevelViewList : List<LevelView>
+    public static LevelViewList Get(IReadOnlyList<AbstractTRScriptedLevel> allLevels, int currentLevel)
     {
-        public static LevelViewList Get(IReadOnlyList<AbstractTRScriptedLevel> allLevels, int currentLevel)
+        LevelViewList list = new LevelViewList();
+        for (int i = 0; i < allLevels.Count; i++)
         {
-            LevelViewList list = new LevelViewList();
-            for (int i = 0; i < allLevels.Count; i++)
+            list.Add(new LevelView(allLevels[i])
             {
-                list.Add(new LevelView(allLevels[i])
-                {
-                    Visible = i <= currentLevel
-                });
-            }
-            return list;
+                Visible = i <= currentLevel
+            });
         }
+        return list;
     }
 }
