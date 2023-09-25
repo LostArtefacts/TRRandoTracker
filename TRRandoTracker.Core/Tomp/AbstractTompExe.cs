@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using TRGE.Core;
 using TRRandoTracker.Core.Tracker;
 
@@ -24,8 +25,18 @@ public abstract class AbstractTompExe
         try
         {
             FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(exePath);
+            string version = versionInfo.ProductVersion;
+            if (version != null)
+            {
+                Match m = new Regex(@"\d+\.").Match(version);
+                if (m.Success)
+                {
+                    version = version[m.Index..].Trim();
+                }
+            }
+
             int[] parts = new int[] { 0, 0, 0 };
-            string[] productParts = versionInfo.ProductVersion.Split('.');
+            string[] productParts = version.Split('.');
             for (int i = 0; i < productParts.Length; i++)
             {
                 int j = 0;
