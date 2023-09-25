@@ -1,44 +1,41 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TRRandoTracker.Core.Tomp.Exes;
+﻿using TRRandoTracker.Core.Tomp.Exes;
 
-namespace TRRandoTracker.Core.Tomp
+namespace TRRandoTracker.Core.Tomp;
+
+public static class TompExeFactory
 {
-    public static class TompExeFactory
+    private static readonly List<AbstractTompExe> _exes = new List<AbstractTompExe>
     {
-        private static readonly List<AbstractTompExe> _exes = new List<AbstractTompExe>
-        {
-            new Tomp2EPC(), new Tomp2German(), new Tomp2Japanese(), new Tomp2Multipatch(), new Tomp2UKBox(), new Tomp2CDPatch(),
-            new Tomp3International(), new Tomp3Japanese()
-        };
+        new Tomp2EPC(), new Tomp2German(), new Tomp2Japanese(), new Tomp2Multipatch(), new Tomp2UKBox(), new Tomp2CDPatch(),
+        new Tomp3International(), new Tomp3Japanese()
+    };
 
-        public static AbstractTompExe Get(string processName, byte[] identifier, string checksum)
+    public static AbstractTompExe Get(string processName, byte[] identifier, string checksum)
+    {
+        foreach (AbstractTompExe exe in _exes)
         {
-            foreach (AbstractTompExe exe in _exes)
+            if (exe.Identifier.SequenceEqual(identifier))
             {
-                if (exe.Identifier.SequenceEqual(identifier))
-                {
-                    return exe;
-                }
+                return exe;
+            }
 
-                if (exe.Hashes != null)
+            if (exe.Hashes != null)
+            {
+                foreach (string hash in exe.Hashes)
                 {
-                    foreach (string hash in exe.Hashes)
+                    if (hash == checksum)
                     {
-                        if (hash == checksum)
-                        {
-                            return exe;
-                        }
+                        return exe;
                     }
                 }
             }
-
-            if (processName.ToLower() == "tomb1main")
-            {
-                return new Tomb1Main();
-            }
-
-            return null;
         }
+
+        if (processName.ToLower() == "tomb1main")
+        {
+            return new Tomb1Main();
+        }
+
+        return null;
     }
 }

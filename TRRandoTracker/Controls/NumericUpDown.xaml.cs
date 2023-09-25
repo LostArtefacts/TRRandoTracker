@@ -3,127 +3,126 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace TRRandoTracker.Controls
+namespace TRRandoTracker.Controls;
+
+/// <summary>
+/// Interaction logic for NumericUpDown.xaml
+/// </summary>
+public partial class NumericUpDown : UserControl
 {
-    /// <summary>
-    /// Interaction logic for NumericUpDown.xaml
-    /// </summary>
-    public partial class NumericUpDown : UserControl
+    #region Dependency Properties
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register
+    (
+        "Value", typeof(int), typeof(NumericUpDown), new PropertyMetadata(1)
+    );
+
+    public static readonly DependencyProperty MinValueProperty = DependencyProperty.Register
+    (
+        "MinValue", typeof(int), typeof(NumericUpDown), new PropertyMetadata(1)
+    );
+
+    public static readonly DependencyProperty MaxValueProperty = DependencyProperty.Register
+    (
+        "MaxValue", typeof(int), typeof(NumericUpDown), new PropertyMetadata(int.MaxValue)
+    );
+
+    public int Value
     {
-        #region Dependency Properties
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register
-        (
-            "Value", typeof(int), typeof(NumericUpDown), new PropertyMetadata(1)
-        );
+        get => (int)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, AdjustValue(value));
+    }
 
-        public static readonly DependencyProperty MinValueProperty = DependencyProperty.Register
-        (
-            "MinValue", typeof(int), typeof(NumericUpDown), new PropertyMetadata(1)
-        );
-
-        public static readonly DependencyProperty MaxValueProperty = DependencyProperty.Register
-        (
-            "MaxValue", typeof(int), typeof(NumericUpDown), new PropertyMetadata(int.MaxValue)
-        );
-
-        public int Value
+    public int MinValue
+    {
+        get => (int)GetValue(MinValueProperty);
+        set
         {
-            get => (int)GetValue(ValueProperty);
-            set => SetValue(ValueProperty, AdjustValue(value));
+            SetValue(MinValueProperty, value);
+            Value = Value;
         }
+    }
 
-        public int MinValue
+    public int MaxValue
+    {
+        get => (int)GetValue(MaxValueProperty);
+        set
         {
-            get => (int)GetValue(MinValueProperty);
-            set
-            {
-                SetValue(MinValueProperty, value);
-                Value = Value;
-            }
+            SetValue(MaxValueProperty, value);
+            Value = Value;
         }
+    }
+    #endregion
 
-        public int MaxValue
+    public NumericUpDown()
+    {
+        InitializeComponent();
+        _textBox.DataContext = this;
+    }
+
+    private void RepeatUpButton_Click(object sender, RoutedEventArgs e)
+    {
+        ++Value;
+    }
+
+    private void RepeatDownButton_Click(object sender, RoutedEventArgs e)
+    {
+        --Value;
+    }
+
+    private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+    {
+        object data = e.DataObject.GetData(DataFormats.UnicodeText);
+        if (!ValidateInput(data.ToString()))
         {
-            get => (int)GetValue(MaxValueProperty);
-            set
-            {
-                SetValue(MaxValueProperty, value);
-                Value = Value;
-            }
+            e.CancelCommand();
         }
-        #endregion
+    }
 
-        public NumericUpDown()
+    private void TextBox_TextInput(object sender, TextCompositionEventArgs e)
+    {
+        e.Handled = !ValidateInput(e.Text);
+    }
+
+    private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        int mod = 1;
+        if (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))
         {
-            InitializeComponent();
-            _textBox.DataContext = this;
+            mod = 10;
         }
-
-        private void RepeatUpButton_Click(object sender, RoutedEventArgs e)
+        switch (e.Key)
         {
-            ++Value;
+            case Key.Up:
+                Value += mod;
+                break;
+            case Key.Down:
+                Value -= mod;
+                break;
         }
+    }
 
-        private void RepeatDownButton_Click(object sender, RoutedEventArgs e)
+    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        int v = Value;
+        if (ValidateInput(_textBox.Text))
         {
-            --Value;
+            v = int.Parse(_textBox.Text);
         }
-
-        private void TextBox_Pasting(object sender, DataObjectPastingEventArgs e)
+        else
         {
-            object data = e.DataObject.GetData(DataFormats.UnicodeText);
-            if (!ValidateInput(data.ToString()))
-            {
-                e.CancelCommand();
-            }
-        }
+            e.Handled = true;
 
-        private void TextBox_TextInput(object sender, TextCompositionEventArgs e)
-        {
-            e.Handled = !ValidateInput(e.Text);
         }
+        Value = v;
+    }
 
-        private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            int mod = 1;
-            if (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))
-            {
-                mod = 10;
-            }
-            switch (e.Key)
-            {
-                case Key.Up:
-                    Value += mod;
-                    break;
-                case Key.Down:
-                    Value -= mod;
-                    break;
-            }
-        }
+    private bool ValidateInput(string text)
+    {
+        return int.TryParse(text, out int _);
+    }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            int v = Value;
-            if (ValidateInput(_textBox.Text))
-            {
-                v = int.Parse(_textBox.Text);
-            }
-            else
-            {
-                e.Handled = true;
-
-            }
-            Value = v;
-        }
-
-        private bool ValidateInput(string text)
-        {
-            return int.TryParse(text, out int _);
-        }
-
-        private int AdjustValue(int value)
-        {
-            return Math.Min(MaxValue, Math.Max(MinValue, value));
-        }
+    private int AdjustValue(int value)
+    {
+        return Math.Min(MaxValue, Math.Max(MinValue, value));
     }
 }

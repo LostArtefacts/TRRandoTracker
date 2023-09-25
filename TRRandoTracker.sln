@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31105.61
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRRandoTracker", "TRRandoTracker\TRRandoTracker.csproj", "{2116FCEA-A81B-4E86-8798-22DCFD2FDBB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRRandoTracker", "TRRandoTracker\TRRandoTracker.csproj", "{2116FCEA-A81B-4E86-8798-22DCFD2FDBB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRRandoTracker.Core", "TRRandoTracker.Core\TRRandoTracker.Core.csproj", "{4C13DDAE-2AC3-43B8-9BDC-8B4A9741EAD9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TRRandoTracker.Test", "TRRandoTracker.Test\TRRandoTracker.Test.csproj", "{7F49E0A6-408D-41C2-AA82-CD7EC23DB8F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRRandoTracker.Core", "TRRandoTracker.Core\TRRandoTracker.Core.csproj", "{4C13DDAE-2AC3-43B8-9BDC-8B4A9741EAD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		{4C13DDAE-2AC3-43B8-9BDC-8B4A9741EAD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C13DDAE-2AC3-43B8-9BDC-8B4A9741EAD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C13DDAE-2AC3-43B8-9BDC-8B4A9741EAD9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F49E0A6-408D-41C2-AA82-CD7EC23DB8F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F49E0A6-408D-41C2-AA82-CD7EC23DB8F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F49E0A6-408D-41C2-AA82-CD7EC23DB8F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F49E0A6-408D-41C2-AA82-CD7EC23DB8F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
