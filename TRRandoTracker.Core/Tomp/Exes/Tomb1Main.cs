@@ -6,7 +6,7 @@ namespace TRRandoTracker.Core.Tomp.Exes;
 
 public class Tomb1Main : AbstractTompExe
 {
-    public override string Name => "Tomb1Main";
+    public override string Name => "TR1X";
 
     internal override byte[] Identifier => new byte[] { 0,0,0 };
 
@@ -18,7 +18,7 @@ public class Tomb1Main : AbstractTompExe
 
     internal override int CreditsFlag => 0x11A1FC;
 
-    internal override string ScriptPath => @"cfg\Tomb1Main_gameflow.json5";
+    internal override string ScriptPath => @"cfg\TR1X_gameflow.json5";
 
     internal override ITracker CreateTracker(Process process, List<AbstractTRScriptedLevel> levels)
     {
@@ -29,7 +29,12 @@ public class Tomb1Main : AbstractTompExe
         Version version = CalculateProductVersion(process.MainModule.FileName);
         if (version != null)
         {
-            if (version >= new Version(2, 16))
+            if (version >= new Version(3, 0, 3))
+            {
+                _levelAddress = 0x80F58A;
+                _completeAddress = 0xC66629;
+            }
+            else if (version >= new Version(2, 16))
             {
                 _levelAddress = 0x81142A;
                 _completeAddress = 0xC64669;

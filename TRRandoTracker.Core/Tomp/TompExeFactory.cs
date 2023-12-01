@@ -31,7 +31,7 @@ public static class TompExeFactory
             }
         }
 
-        if (processName.ToLower() == "tomb1main")
+        if (processName.ToLower() == "tr1x")
         {
             return new Tomb1Main();
         }

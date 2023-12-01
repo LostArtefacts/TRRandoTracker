@@ -52,9 +52,8 @@
 
                     <Image 
                         Grid.Column="4"
-                        Source="..\Resources\mediless.png"
-                        Height="22"
-                        Width="{Binding MedilessSupported, Converter={util:ConditionalMarkupConverter TrueValue='Auto', FalseValue='0'}}"
+                        Source="..\Resources\mediless.png"                        
+                        Height="{Binding MedilessSupported, Converter={util:ConditionalMarkupConverter TrueValue='22', FalseValue='0'}}"
                         Visibility="{Binding Mediless, Converter={StaticResource BoolToVisConverter}}"/>
                 </StackPanel>
             </Grid>
