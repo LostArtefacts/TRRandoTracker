@@ -154,6 +154,7 @@ public partial class MainWindow : Window
                 _resetMenu.IsEnabled = true;
                 _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
                 break;
+
             case TrackingStatus.InLevel:
                 if (!_timer.IsEnabled && e.CurrentSequence != -1)
                 {
@@ -164,11 +165,20 @@ public partial class MainWindow : Window
                 _gameInProgress = true;
                 _resetMenu.IsEnabled = false;
                 _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
+
+                object focusItem = _listView.Items.GetItemAt(e.CurrentSequence == _listView.Items.Count - 1
+                    ? e.CurrentSequence : e.CurrentSequence + 1);
+                if (focusItem != null)
+                {
+                    _listView.ScrollIntoView(focusItem);
+                }
                 break;
+
             case TrackingStatus.Credits:
                 _timer.Stop();
                 _stopwatch.Stop();
                 break;
+
             case TrackingStatus.ExeStopped:
                 _timer.Stop();
                 _stopwatch.Stop();
