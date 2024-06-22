@@ -53,7 +53,7 @@ internal class Tomb1MainTracker : DefaultTracker
 
     public override TrackingEventArgs GetLevelArgs(int currentLevel, bool titleScreen)
     {
-        TrackingEventArgs e = new TrackingEventArgs
+        TrackingEventArgs e = new()
         {
             Exe = _trackingExe
         };
