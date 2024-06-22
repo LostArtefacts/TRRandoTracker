@@ -18,9 +18,9 @@
     <SelfContained>false</SelfContained>
     <ApplicationIcon>Resources\clipboard.ico</ApplicationIcon>
 
-    <Version>1.6.0</Version>
+    <Version>1.7.0</Version>
     <Product>TR Rando Tracker</Product>
-    <Copyright>Copyright © Tomb Raider Community 2023</Copyright>
+    <Copyright>Copyright © Tomb Raider Community 2024</Copyright>
   </PropertyGroup>
   
   <ItemGroup>
