@@ -29,7 +29,12 @@ public class Tomb1Main : AbstractTompExe
         Version version = CalculateProductVersion(process.MainModule.FileName);
         if (version != null)
         {
-            if (version >= new Version(4, 1, 2))
+            if (version >= new Version(4, 3))
+            {
+                _levelAddress = 0x84964A;
+                _completeAddress = 0xCC155D;
+            }
+            else if (version >= new Version(4, 1, 2))
             {
                 _levelAddress = 0x84870A;
                 _completeAddress = 0xCC92C1;

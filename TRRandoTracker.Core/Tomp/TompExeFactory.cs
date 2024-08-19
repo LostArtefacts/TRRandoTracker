@@ -4,7 +4,7 @@ namespace TRRandoTracker.Core.Tomp;
 
 public static class TompExeFactory
 {
-    private static readonly List<AbstractTompExe> _exes = new List<AbstractTompExe>
+    private static readonly List<AbstractTompExe> _exes = new()
     {
         new Tomp2EPC(), new Tomp2German(), new Tomp2Japanese(), new Tomp2Multipatch(), new Tomp2UKBox(), new Tomp2CDPatch(),
         new Tomp3International(), new Tomp3Japanese()
@@ -12,20 +12,23 @@ public static class TompExeFactory
 
     public static AbstractTompExe Get(string processName, byte[] identifier, string checksum)
     {
-        foreach (AbstractTompExe exe in _exes)
+        if (identifier != null)
         {
-            if (exe.Identifier.SequenceEqual(identifier))
+            foreach (AbstractTompExe exe in _exes)
             {
-                return exe;
-            }
-
-            if (exe.Hashes != null)
-            {
-                foreach (string hash in exe.Hashes)
+                if (exe.Identifier.SequenceEqual(identifier))
                 {
-                    if (hash == checksum)
+                    return exe;
+                }
+
+                if (exe.Hashes != null)
+                {
+                    foreach (string hash in exe.Hashes)
                     {
-                        return exe;
+                        if (hash == checksum)
+                        {
+                            return exe;
+                        }
                     }
                 }
             }
@@ -34,6 +37,11 @@ public static class TompExeFactory
         if (processName.ToLower() == "tr1x")
         {
             return new Tomb1Main();
+        }
+
+        if (processName.ToLower() == "tomb123")
+        {
+            return new TRR();
         }
 
         return null;

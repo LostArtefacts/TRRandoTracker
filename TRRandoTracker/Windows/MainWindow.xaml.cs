@@ -148,6 +148,7 @@ public partial class MainWindow : Window
         switch (e.Status)
         {
             case TrackingStatus.TitleScreen:
+            case TrackingStatus.GameChanged:
                 _timer.Stop();
                 _stopwatch.Stop();
                 _gameInProgress = true;
@@ -166,11 +167,14 @@ public partial class MainWindow : Window
                 _resetMenu.IsEnabled = false;
                 _listView.ItemsSource = LevelViewList.Get(e.Levels, e.CurrentSequence);
 
-                object focusItem = _listView.Items.GetItemAt(e.CurrentSequence == _listView.Items.Count - 1
-                    ? e.CurrentSequence : e.CurrentSequence + 1);
-                if (focusItem != null)
+                if (e.CurrentSequence >= 0 && e.CurrentSequence < _listView.Items.Count)
                 {
-                    _listView.ScrollIntoView(focusItem);
+                    object focusItem = _listView.Items.GetItemAt(e.CurrentSequence == _listView.Items.Count - 1
+                        ? e.CurrentSequence : e.CurrentSequence + 1);
+                    if (focusItem != null)
+                    {
+                        _listView.ScrollIntoView(focusItem);
+                    }
                 }
                 break;
 
@@ -272,7 +276,7 @@ public partial class MainWindow : Window
 
     private void SettingsMenu_Click(object sender, RoutedEventArgs e)
     {
-        SettingsWindow sw = new SettingsWindow();
+        SettingsWindow sw = new();
         if (sw.ShowDialog() ?? false)
         {
             Settings.Instance.Save();

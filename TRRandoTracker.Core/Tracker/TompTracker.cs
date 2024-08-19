@@ -23,7 +23,7 @@ public class TompTracker
 
     public TompTracker()
     {
-        _watcher = new ProcessWatcher("tr1x", "tomb2"/*, "tomb3"*/);
+        _watcher = new ProcessWatcher("tr1x", "tomb2"/*, "tomb3"*/, "tomb123");
         _watcher.ProcessStarted += Watcher_ProcessStarted;
         _watcher.ProcessStopped += Watcher_ProcessStopped;
 
@@ -39,8 +39,14 @@ public class TompTracker
 
     private void Watcher_ProcessStarted(object sender, ProcessEventArgs e)
     {
-        string checksum = new FileInfo(e.Process.MainModule.FileName).Checksum();
-        AbstractTompExe exe = TompExeFactory.Get(e.Process.ProcessName, e.Process.ReadBytes(_exeIDAddress, 3), checksum);
+        string checksum = null;
+        try
+        {
+            checksum = new FileInfo(e.Process.MainModule.FileName).Checksum();
+        }
+        catch { }
+
+        AbstractTompExe exe = TompExeFactory.Get(e.Process.ProcessName, e.Process.ProcessName.ToLower() == "tomb123" ?  null : e.Process.ReadBytes(_exeIDAddress, 3), checksum);
         if (exe != null)
         {
             if (!LoadScriptLevels(e.Process, exe))
@@ -79,6 +85,23 @@ public class TompTracker
 
     private bool LoadScriptLevels(Process process, AbstractTompExe exe)
     {
+        if (exe.ScriptPath == null)
+        {
+            _tracker = exe.CreateTracker(process, null);
+            _tracker.GameChanged += (o, e) =>
+            {
+                _scriptLevels = new(e.Levels);
+                TrackingChanged?.Invoke(this, new TrackingEventArgs
+                {
+                    Exe = _trackingExe = exe,
+                    Status = TrackingStatus.GameChanged,
+                    Levels = _scriptLevels,
+                    CurrentSequence = -1,
+                });
+            };
+            return true;
+        }
+
         string datFile = Path.Combine(Path.GetDirectoryName(process.MainModule.FileName), exe.ScriptPath);
         if (File.Exists(datFile))
         {
