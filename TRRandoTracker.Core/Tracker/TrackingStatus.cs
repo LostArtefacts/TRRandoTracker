@@ -7,5 +7,6 @@ public enum TrackingStatus
     InDemo,
     InLevel,
     Credits,
-    ExeStopped
+    ExeStopped,
+    GameChanged,
 }

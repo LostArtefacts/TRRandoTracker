@@ -8,4 +8,5 @@ internal interface ITracker
     void Track();
     bool InterpretLevel(int level);
     TrackingEventArgs GetLevelArgs(int currentLevel, bool titleScreen);
+    public event EventHandler<TrackingEventArgs> GameChanged;
 }

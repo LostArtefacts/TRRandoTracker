@@ -10,6 +10,8 @@ internal class DefaultTracker : ITracker
     protected readonly Process _process;
     protected readonly List<AbstractTRScriptedLevel> _levels;
 
+    public event EventHandler<TrackingEventArgs> GameChanged;
+
     public int Level { get; set; }
     public bool IsTitle { get; set; }
     public bool IsCredits { get; set; }
@@ -19,6 +21,14 @@ internal class DefaultTracker : ITracker
         _trackingExe = trackingExe;
         _process = process;
         _levels = levels;
+    }
+
+    protected void TriggerGameChanged()
+    {
+        GameChanged?.Invoke(this, new()
+        {
+            Levels = _levels,
+        });
     }
 
     public virtual void Track()
@@ -35,7 +45,7 @@ internal class DefaultTracker : ITracker
 
     public virtual TrackingEventArgs GetLevelArgs(int currentLevel, bool titleScreen)
     {
-        TrackingEventArgs e = new TrackingEventArgs
+        TrackingEventArgs e = new()
         {
             Exe = _trackingExe
         };
